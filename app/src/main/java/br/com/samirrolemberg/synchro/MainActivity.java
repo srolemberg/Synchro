@@ -2,16 +2,40 @@ package br.com.samirrolemberg.synchro;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import br.com.samirrolemberg.synchro.adapter.ExibirFeedsAdapter;
+import br.com.samirrolemberg.synchro.model.Feed;
 
 
 public class MainActivity extends ActionBarActivity {
 
+    private RecyclerView recList = null;
+    private StaggeredGridLayoutManager layoutManager = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.act_lista_exibir_feeds);
+        recList = (RecyclerView) findViewById(R.id.listaExibirFeeds);
+        recList.setHasFixedSize(true);
+        layoutManager = new StaggeredGridLayoutManager(1,StaggeredGridLayoutManager.VERTICAL);
+        layoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
+        recList.setLayoutManager(layoutManager);
+
+        List<Feed> feeds = new ArrayList<>();
+
+        for (int i = 0; i<10000; i++){
+            Feed feed = new Feed.Builder().titulo("Titulo: "+i).link("Link"+i).build();
+            feeds.add(feed);
+        }
+
+        recList.setAdapter(new ExibirFeedsAdapter(feeds));
     }
 
 
