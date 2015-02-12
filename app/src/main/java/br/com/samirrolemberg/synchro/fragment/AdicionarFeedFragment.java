@@ -1,16 +1,15 @@
 package br.com.samirrolemberg.synchro.fragment;
 
 import android.app.ProgressDialog;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.os.AsyncTask;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,12 +20,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+
 import br.com.samirrolemberg.synchro.R;
-import br.com.samirrolemberg.synchro.activity.AdicionarFeedActivity;
 import br.com.samirrolemberg.synchro.delegate.AdicionarFeedDelegate;
 import br.com.samirrolemberg.synchro.model.Categoria;
 import br.com.samirrolemberg.synchro.model.Feed;
-import br.com.samirrolemberg.synchro.tasks.AdicionarFeedTask;
+import br.com.samirrolemberg.synchro.tasks.AdicionarFeedVolleyTask;
 import br.com.samirrolemberg.synchro.util.C;
 
 /**
@@ -43,21 +43,10 @@ public class AdicionarFeedFragment extends Fragment implements AdicionarFeedDele
 
     private TextView nome, descricao, link, idioma, categoria;
 
-    private AdicionarFeedTask task;
-    private String unique = C.c_APP+C.c_ADICIONAR_FEED;
+    private AdicionarFeedVolleyTask task;
     private Feed feed;
 
     ProgressDialog pDialog;
-
-    private BroadcastReceiver bAdicionarFeed = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent.getSerializableExtra(C.c_ADICIONAR_FEED)!=null){
-                feed = (Feed) intent.getSerializableExtra(C.c_ADICIONAR_FEED);
-                show(context, feed);
-            }
-        }
-    };
 
     private void show(Context context, Feed feed){
         layout.setVisibility(View.VISIBLE);
@@ -78,6 +67,12 @@ public class AdicionarFeedFragment extends Fragment implements AdicionarFeedDele
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+        Log.i("outState","create");
+        if (savedInstanceState!=null){
+            Log.i("outState","dessalvando");
+            feed = (Feed) savedInstanceState.getSerializable("feed");
+            setLayoutValues(feed);
+        }
     }
 
     @Override
@@ -107,11 +102,11 @@ public class AdicionarFeedFragment extends Fragment implements AdicionarFeedDele
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (URLUtil.isValidUrl(url.getText().toString())) {//se a url é valida
                     layout.setVisibility(View.GONE);
-                    task = new AdicionarFeedTask(getActivity(), AdicionarFeedFragment.this);
+                    task = new AdicionarFeedVolleyTask(getActivity(), AdicionarFeedFragment.this);
                     String params[] = {
                             url.getText().toString()
                     };
-                    task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, params);
+                    task.doRequest(Request.Method.GET, params);
                 } else {
                     Toast.makeText(getActivity(), "URL inválida.", Toast.LENGTH_LONG).show();
                 }
@@ -130,8 +125,8 @@ public class AdicionarFeedFragment extends Fragment implements AdicionarFeedDele
             @Override
             public void onCancel(DialogInterface dialog) {
                 if (task!=null){
-                    if (task.getStatus().equals(AsyncTask.Status.RUNNING)||task.getStatus().equals(AsyncTask.Status.PENDING)){
-                        task.cancel(true);
+                    if (task.status.equals(C.getContext().getString(R.string.EXECUTANDO))){
+                        task.cancel();
                     }
                 }
             }
@@ -140,21 +135,48 @@ public class AdicionarFeedFragment extends Fragment implements AdicionarFeedDele
     }
 
     @Override
-    public void onPostExecute(Intent intent) {
+    public void onPostExecute(Feed feed) {
         if (task!=null) {
             pDialog.dismiss();
         }
+        if (feed!=null){
+            setLayoutValues(feed);
+            this.feed = feed;
+        }
+    }
+
+    private void setLayoutValues(Feed feed){
+        nome.setText(feed.getTitulo());
+        descricao.setText(feed.getDescricao());
+        link.setText(feed.getRss());
+        idioma.setText(feed.getIdioma());
+        StringBuffer cat = new StringBuffer();
+        for(Categoria c : feed.getCategorias()){
+            cat.append(c.getNome()+"|");
+        }
+        categoria.setText(cat.toString());
         layout.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onError(String mensagem) {
+        if (mensagem!=null){
+            Toast.makeText(C.getContext(), mensagem,Toast.LENGTH_LONG).show();
+            pDialog.dismiss();
+            layout.setVisibility(View.GONE);
+        }
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if (task!=null) {
-            if (task.getStatus().equals(AsyncTask.Status.RUNNING) || task.getStatus().equals(AsyncTask.Status.PENDING)) {
-                //pDialog = ProgressDialog.show(getActivity(), "", "", true);
+            if (task.status.equals(C.getContext().getString(R.string.EXECUTANDO))) {
                 pDialog.show();
             }
+        }
+        if (feed!=null){
+            setLayoutValues(feed);
         }
     }
 
@@ -164,5 +186,16 @@ public class AdicionarFeedFragment extends Fragment implements AdicionarFeedDele
             pDialog.dismiss();
         }
         super.onDetach();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        Log.i("outState","salvando");
+        outState.putSerializable("feed",feed);
+        super.onSaveInstanceState(outState);
+
+        SharedPreferences preferences = C.preferences(C.getContext().getString(R.string.c_ADICIONAR_FEED));
+
+
     }
 }

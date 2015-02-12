@@ -10,6 +10,7 @@ import br.com.samirrolemberg.synchro.model.Feed;
 public interface AdicionarFeedDelegate {
 
     void onPreExecute();
-    void onPostExecute(Intent intent);
+    void onPostExecute(Feed feed);
+    void onError(String mensagem);
 
 }

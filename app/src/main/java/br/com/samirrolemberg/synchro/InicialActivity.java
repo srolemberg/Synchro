@@ -9,7 +9,6 @@ import android.view.MenuItem;
 import br.com.samirrolemberg.synchro.activity.AdicionarFeedActivity;
 import br.com.samirrolemberg.synchro.fragment.InicialFragment;
 
-
 public class InicialActivity extends ActionBarActivity {
 
     @Override

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="c_APP">br.com.samirrolemberg.synchro</string>
+    <string name="c_ADICIONAR_FEED">.bAdicionarFeed</string>
+    <string name="c_ERRO">.bERRO</string>
+
+    <string name="INICIANDO">INICIANDO</string>
+    <string name="EXECUTANDO">EXECUTANDO</string>
+    <string name="FINALIZADO">FINALIZADO</string>
+
+</resources>

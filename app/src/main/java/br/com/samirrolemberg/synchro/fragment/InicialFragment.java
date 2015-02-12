@@ -36,7 +36,7 @@ public class InicialFragment extends Fragment {
 
         List<Feed> feeds = new ArrayList<>();
 
-        for (int i = 0; i<10000; i++){
+        for (int i = 0; i<10; i++){
             Feed feed = new Feed.Builder().titulo("Titulo: "+i).link("Link"+i).build();
             feeds.add(feed);
         }
