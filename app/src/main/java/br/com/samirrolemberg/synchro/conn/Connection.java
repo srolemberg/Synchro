@@ -8,7 +8,7 @@ import android.util.Log;
 public class Connection extends SQLiteOpenHelper{
 
 	protected static final int VERSAO = 1;
-	protected static final String DATABASE = "db_synchro";
+	protected static final String DATABASE = "db_synchro.db";
 	
 	public Connection(Context context) {
 		super(context, DATABASE, null, VERSAO);

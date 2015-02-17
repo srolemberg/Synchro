@@ -1,13 +1,15 @@
 package br.com.samirrolemberg.synchro;
 
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import br.com.samirrolemberg.synchro.activity.AdicionarFeedActivity;
 import br.com.samirrolemberg.synchro.fragment.InicialFragment;
+import br.com.samirrolemberg.synchro.util.C;
 
 public class InicialActivity extends ActionBarActivity {
 
@@ -39,6 +41,8 @@ public class InicialActivity extends ActionBarActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.menu_adicionar_feed) {
+            SharedPreferences preferences = C.getPreferences(C.getContext().getString(R.string.c_ADICIONAR_FEED));
+            preferences.edit().remove(C.getContext().getString(R.string.FEED_CACHE)).commit();
             Intent intent = new Intent(this, AdicionarFeedActivity.class);
             startActivity(intent);
             return true;

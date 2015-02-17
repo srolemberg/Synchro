@@ -8,5 +8,11 @@
     <string name="INICIANDO">INICIANDO</string>
     <string name="EXECUTANDO">EXECUTANDO</string>
     <string name="FINALIZADO">FINALIZADO</string>
+    <string name="FEED_CACHE">FEED_CACHE</string>
 
+    <!-- Receiver Names -->
+    <string name="r_AdicionarFeed">AdicionarFeed</string>
+    <!-- Models Names -->
+    <string name="m_Feed">Feed</string>
+    <string name="m_idFeed">idFeed</string>
 </resources>

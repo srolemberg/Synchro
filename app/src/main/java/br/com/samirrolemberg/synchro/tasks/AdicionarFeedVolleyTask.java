@@ -2,11 +2,8 @@ package br.com.samirrolemberg.synchro.tasks;
 
 
 import android.content.Context;
-import android.content.Intent;
-import android.net.wifi.WifiConfiguration;
 import android.util.Log;
 
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -20,7 +17,6 @@ import java.io.StringReader;
 
 import br.com.samirrolemberg.synchro.R;
 import br.com.samirrolemberg.synchro.delegate.AdicionarFeedDelegate;
-import br.com.samirrolemberg.synchro.model.ExceptionMessage;
 import br.com.samirrolemberg.synchro.model.Feed;
 import br.com.samirrolemberg.synchro.model.SimpleFeed;
 import br.com.samirrolemberg.synchro.util.C;
@@ -81,7 +77,7 @@ public class AdicionarFeedVolleyTask implements Response.Listener<String>, Respo
             Log.e("ADDFEED", "FeedException");
             Log.e("ADDFEED", e.getMessage(),e);
             status = C.getContext().getString(R.string.FINALIZADO);
-            delegate.onError(e.getMessage());
+            delegate.onError("Ocorreu um erro ao baixar o arquivo XML do link fornecido.\nO Feed é inválido ou está corrompido.\n"+e.getMessage());
         }  catch (Exception e) {
             Log.e("ADDFEED", "Exception");
             Log.e("ADDFEED", e.getMessage(),e);
@@ -99,8 +95,15 @@ public class AdicionarFeedVolleyTask implements Response.Listener<String>, Respo
 
     @Override
     public void onErrorResponse(VolleyError error) {
-        Log.e("response", error.getMessage());
-        delegate.onError(error.getMessage());
+        //error.networkResponse.statusCode
+        //Log.e("response", ""+        error.networkResponse.statusCode        );
+        String msg = "";
+        if (error.networkResponse!=null){
+            msg = error.networkResponse+"";
+        }else{
+            msg = "Não foi possível completar a requisição ao acessar o link informado.";
+        }
+        delegate.onError(msg);
         status = C.getContext().getString(R.string.FINALIZADO);
    }
 }

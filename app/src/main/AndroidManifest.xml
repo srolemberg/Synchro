@@ -3,13 +3,14 @@
     package="br.com.samirrolemberg.synchro" >
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <application
+        android:name=".util.C"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme"
-        android:name=".util.C">
+        android:theme="@style/AppTheme" >
         <activity
             android:name=".InicialActivity"
             android:label="@string/title_activity_inicial" >
@@ -22,8 +23,23 @@
         <activity
             android:name=".activity.AdicionarFeedActivity"
             android:label="@string/title_activity_adicionar_feed"
-            android:parentActivityName=".InicialActivity"
-            >
+            android:parentActivityName=".InicialActivity" >
         </activity>
+
+        <receiver
+            android:name=".receiver.GlobalReceiver"
+            android:enabled="true"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="AdicionarFeed" >
+                </action>
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name=".service.SalvarFeedService"
+            android:exported="false" >
+        </service>
     </application>
+
 </manifest>

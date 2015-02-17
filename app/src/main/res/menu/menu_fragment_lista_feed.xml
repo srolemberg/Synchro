@@ -1,0 +1,18 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/menu_fragment_lista_feed_detalhes"
+        android:title="Detalhes"/>
+    <item
+        android:id="@+id/menu_fragment_lista_feed_abrir_no_navegador"
+        android:title="Abrir no Navegador"/>
+    <item
+        android:id="@+id/menu_fragment_lista_feed_atualizar_feed"
+        android:title="Atualizar Feed"/>
+    <item
+        android:id="@+id/menu_fragment_lista_feed_limpar_conteudo"
+        android:title="Limpar"/>
+    <item
+        android:id="@+id/menu_fragment_lista_feed_excluir"
+        android:title="Excluir"/>
+</menu>
