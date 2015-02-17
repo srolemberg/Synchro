@@ -5,16 +5,19 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import br.com.samirrolemberg.synchro.R;
-import br.com.samirrolemberg.synchro.receiver.GlobalReceiver;
+import br.com.samirrolemberg.synchro.receiver.ReceiverAdicionarFeed;
+import br.com.samirrolemberg.synchro.receiver.ReceiverLimparConteudoFeed;
 
 /**
  * Created by samir on 05/02/2015.
  */
 public class C extends Application{
     private static Context context;
-    public static GlobalReceiver globalReceiver;
+    public static ReceiverAdicionarFeed receiverAdicionarFeed;
+    public static ReceiverLimparConteudoFeed receiverLimparConteudoFeed;
 
     public final static int NOTIFICATION_ID_ADICIONAR_FEED = 100;
+    public final static int NOTIFICATION_ID_LIMPAR_CONTEUDO_FEED = 200;
 
     public static Context getContext(){
         return context;
@@ -24,7 +27,8 @@ public class C extends Application{
     public void onCreate() {
         super.onCreate();
         context=this;
-        globalReceiver = new GlobalReceiver();
+        receiverAdicionarFeed = new ReceiverAdicionarFeed();
+        receiverLimparConteudoFeed = new ReceiverLimparConteudoFeed();
     }
 
     public static String getUnique(String c_){

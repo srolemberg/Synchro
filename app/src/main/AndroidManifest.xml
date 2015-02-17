@@ -16,7 +16,6 @@
             android:label="@string/title_activity_inicial" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -27,19 +26,20 @@
         </activity>
 
         <receiver
-            android:name=".receiver.GlobalReceiver"
+            android:name=".receiver.ReceiverAdicionarFeed"
             android:enabled="true"
             android:exported="false" >
-            <intent-filter>
-                <action android:name="AdicionarFeed" >
-                </action>
-            </intent-filter>
+            <intent-filter><action android:name="AdicionarFeed"/></intent-filter>
+        </receiver>
+        <receiver
+            android:name=".receiver.ReceiverLimparConteudoFeed"
+            android:enabled="true"
+            android:exported="false" >
+            <intent-filter><action android:name="LimparConteudoFeed" /></intent-filter>
         </receiver>
 
-        <service
-            android:name=".service.SalvarFeedService"
-            android:exported="false" >
-        </service>
+        <service android:name=".service.SalvarFeedService" android:exported="false"/>
+        <service android:name=".service.LimparConteudoFeedService" android:exported="false"/>
     </application>
 
 </manifest>

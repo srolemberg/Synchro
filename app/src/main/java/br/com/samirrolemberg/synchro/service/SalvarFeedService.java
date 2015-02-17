@@ -25,7 +25,7 @@ public class SalvarFeedService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        C.getContext().unregisterReceiver(C.globalReceiver);
+        C.getContext().unregisterReceiver(C.receiverAdicionarFeed);
     }
 
     @Override

@@ -1,6 +1,9 @@
 package br.com.samirrolemberg.synchro.fragment;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
@@ -20,9 +23,11 @@ import java.util.List;
 
 import br.com.samirrolemberg.synchro.R;
 import br.com.samirrolemberg.synchro.adapter.ExibirFeedsAdapter;
+import br.com.samirrolemberg.synchro.adapter.ExibirFeedsVazioAdapter;
 import br.com.samirrolemberg.synchro.conn.DatabaseManager;
 import br.com.samirrolemberg.synchro.dao.DAOFeed;
 import br.com.samirrolemberg.synchro.model.Feed;
+import br.com.samirrolemberg.synchro.service.LimparConteudoFeedService;
 import br.com.samirrolemberg.synchro.util.C;
 import br.com.samirrolemberg.synchro.util.U;
 
@@ -32,7 +37,8 @@ import br.com.samirrolemberg.synchro.util.U;
 public class InicialFragment extends Fragment {
 
     private List<Feed> feeds;
-    private ExibirFeedsAdapter adapter;
+    private ExibirFeedsAdapter adapter1;
+    private ExibirFeedsVazioAdapter adapter2;
     private DAOFeed daoFeed;
 
     private RelativeLayout rootView;
@@ -57,8 +63,12 @@ public class InicialFragment extends Fragment {
         DatabaseManager.getInstance().closeDatabase();
 
         if (feeds.size()>0){
-            adapter = new ExibirFeedsAdapter(feeds, InicialFragment.this);
-            recyclerView.setAdapter(adapter);
+            adapter1 = new ExibirFeedsAdapter(feeds, InicialFragment.this);
+            recyclerView.setAdapter(adapter1);
+        }else{
+            feeds.add(new Feed.Builder().build());
+            adapter2 = new ExibirFeedsVazioAdapter(feeds, InicialFragment.this);
+            recyclerView.setAdapter(adapter2);
         }
 
         setRetainInstance(true);
@@ -86,11 +96,47 @@ public class InicialFragment extends Fragment {
             }else{
                 Toast.makeText(C.getContext(), "Não há conexão de internet.", Toast.LENGTH_SHORT).show();
             }
-            //Toast.makeText(C.getContext(), "Abrir: "+feeds.get(position).getTitulo(), Toast.LENGTH_LONG).show();
         }else if(id==R.id.menu_fragment_lista_feed_atualizar_feed){
             Toast.makeText(C.getContext(), "Atualizar: "+feeds.get(position).getTitulo(), Toast.LENGTH_LONG).show();
         }else if(id==R.id.menu_fragment_lista_feed_limpar_conteudo){
-            Toast.makeText(C.getContext(), "Limpar: "+feeds.get(position).getTitulo(), Toast.LENGTH_LONG).show();
+            String frase = "Você removerá todo o conteúdo adicionado para este Feed anteriormente. Deseja continuar?";
+            AlertDialog dialog = new AlertDialog.Builder(getActivity())
+                    .setTitle("Atenção")
+                    .setMessage(frase)
+                    .setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if (U.isMyServiceRunning(LimparConteudoFeedService.class, C.getContext())){
+                                final Feed feed = feeds.get(position);
+                                final long idFeed = feed.getIdFeed();
+
+                                IntentFilter filter = new IntentFilter(C.getContext().getString(R.string.r_LimparConteudoFeed));
+                                C.getContext().registerReceiver(C.receiverLimparConteudoFeed, filter);
+
+                                Intent intent = new Intent();
+                                intent.setAction(C.getContext().getString(R.string.r_LimparConteudoFeed));
+                                intent.putExtra(C.getContext().getString(R.string.m_Feed), feed);
+                                intent.putExtra(C.getContext().getString(R.string.m_idFeed,idFeed), idFeed);
+                                C.getContext().sendBroadcast(intent);
+                            }else{
+                                Toast.makeText(C.getContext(), "A operação está ocupada no momento. Aguarde alguns instantes.", Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    })
+                    .setNegativeButton("Não", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .setOnCancelListener(new DialogInterface.OnCancelListener() {
+                        @Override
+                        public void onCancel(DialogInterface dialog) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .setCancelable(true)
+                    .show();
         }else if(id==R.id.menu_fragment_lista_feed_excluir){
             Toast.makeText(C.getContext(), "Excluir: "+feeds.get(position).getTitulo(), Toast.LENGTH_LONG).show();
         }

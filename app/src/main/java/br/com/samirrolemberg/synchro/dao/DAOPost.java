@@ -1,15 +1,16 @@
 package br.com.samirrolemberg.synchro.dao;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+
 import br.com.samirrolemberg.synchro.conn.DatabaseManager;
 import br.com.samirrolemberg.synchro.model.Feed;
 import br.com.samirrolemberg.synchro.model.Post;
@@ -73,7 +74,29 @@ public class DAOPost extends DAO{
 		return posts;
 	}
 
-	public long size(Feed feed){
+    public List<Post> listarIDS(Feed feed){
+        List<Post> posts = new ArrayList<Post>();
+        try {
+            String[] args = {feed.getIdFeed()+""};
+            StringBuffer sql = new StringBuffer();
+            sql.append("select idPost from "+TABLE+" where idFeed = ? order by data_publicacao desc");
+            Cursor cursor = database.rawQuery(sql.toString(), args);
+            while (cursor.moveToNext()) {
+                Post post = new Post.Builder()
+                        .idPost(cursor.getLong(cursor.getColumnIndex("idPost")))
+                        .feed(feed)
+                        .build();
+                posts.add(post);
+            }
+            cursor.close();
+        } catch (Exception e) {
+            Log.i("DAOs", e.getLocalizedMessage(),e);
+        }
+        return posts;
+    }
+
+
+    public long size(Feed feed){
 		long resultado = 0;
 		try {
 			String[] args = {feed.getIdFeed()+""};

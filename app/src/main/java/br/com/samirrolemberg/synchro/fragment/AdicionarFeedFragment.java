@@ -103,7 +103,7 @@ public class AdicionarFeedFragment extends Fragment implements AdicionarFeedDele
             setLayoutValues(feed);
         }
 
-        //getActivity().registerForContextMenu(layout);
+        //getActivity().registerForContextMenu(dialog_sobre);
 
         //ouvir componentes
         add.setOnClickListener(new View.OnClickListener() {
@@ -115,7 +115,7 @@ public class AdicionarFeedFragment extends Fragment implements AdicionarFeedDele
                     DatabaseManager.getInstance().closeDatabase();
 
                     IntentFilter filter = new IntentFilter(C.getContext().getString(R.string.r_AdicionarFeed));
-                    C.getContext().registerReceiver(C.globalReceiver, filter);
+                    C.getContext().registerReceiver(C.receiverAdicionarFeed, filter);
 
                     Intent intent = new Intent();
                     intent.setAction(C.getContext().getString(R.string.r_AdicionarFeed));
@@ -134,7 +134,7 @@ public class AdicionarFeedFragment extends Fragment implements AdicionarFeedDele
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (URLUtil.isValidUrl(url.getText().toString())) {//se a url é valida
-                    if (!U.isConnected(C.getContext())){
+                    if (U.isConnected(C.getContext())){
                         layout.setVisibility(View.GONE);
                         task = new AdicionarFeedVolleyTask(getActivity(), AdicionarFeedFragment.this);
                         String params[] = {
