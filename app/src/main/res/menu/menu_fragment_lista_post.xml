@@ -1,0 +1,15 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/menu_fragment_lista_post_detalhes"
+        android:title="Detalhes"/>
+    <item
+        android:id="@+id/menu_fragment_lista_post_abrir_no_navegador"
+        android:title="Abrir no Navegador"/>
+    <item
+        android:id="@+id/menu_fragment_lista_post_compartilhar"
+        android:title="Compartilhar"/>
+    <item
+        android:id="@+id/menu_fragment_lista_post_excluir"
+        android:title="Excluir"/>
+</menu>

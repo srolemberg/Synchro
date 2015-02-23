@@ -13,6 +13,7 @@ import br.com.samirrolemberg.synchro.receiver.ReceiverLimparConteudoFeed;
  */
 public class C extends Application{
     private static Context context;
+
     public static ReceiverAdicionarFeed receiverAdicionarFeed;
     public static ReceiverLimparConteudoFeed receiverLimparConteudoFeed;
 

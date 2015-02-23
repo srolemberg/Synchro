@@ -41,9 +41,6 @@ import br.com.samirrolemberg.synchro.util.U;
  */
 public class AdicionarFeedFragment extends Fragment implements AdicionarFeedDelegate {
 
-    public AdicionarFeedFragment() {
-    }
-
     private EditText url;
     private Button add;
     private View layout;

@@ -1,15 +1,8 @@
 package br.com.samirrolemberg.synchro.activity;
 
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.os.Build;
+import android.support.v4.app.NavUtils;
+import android.support.v7.app.ActionBarActivity;
 
 import br.com.samirrolemberg.synchro.R;
 import br.com.samirrolemberg.synchro.fragment.AdicionarFeedFragment;
@@ -27,4 +20,8 @@ public class AdicionarFeedActivity extends ActionBarActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        NavUtils.navigateUpFromSameTask(this);
+    }
 }

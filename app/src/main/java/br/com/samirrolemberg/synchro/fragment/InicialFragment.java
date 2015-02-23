@@ -11,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -106,7 +107,7 @@ public class InicialFragment extends Fragment {
                     .setPositiveButton("Sim", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            if (U.isMyServiceRunning(LimparConteudoFeedService.class, C.getContext())){
+                            if (!U.isMyServiceRunning(LimparConteudoFeedService.class, C.getContext())){
                                 final Feed feed = feeds.get(position);
                                 final long idFeed = feed.getIdFeed();
 
@@ -118,6 +119,7 @@ public class InicialFragment extends Fragment {
                                 intent.putExtra(C.getContext().getString(R.string.m_Feed), feed);
                                 intent.putExtra(C.getContext().getString(R.string.m_idFeed,idFeed), idFeed);
                                 C.getContext().sendBroadcast(intent);
+                                Log.w("RECEIVER","INICIAL CLICK");
                             }else{
                                 Toast.makeText(C.getContext(), "A operação está ocupada no momento. Aguarde alguns instantes.", Toast.LENGTH_LONG).show();
                             }

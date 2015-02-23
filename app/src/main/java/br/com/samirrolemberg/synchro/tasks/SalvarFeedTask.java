@@ -65,7 +65,7 @@ public class SalvarFeedTask extends AsyncTask<String, Integer, Void> {
                     .setContentTitle("Adicionando "+feed.getTitulo())
                     .setContentText("Adicionando novos registros.")
                     .setOngoing(true)
-                    .setSmallIcon(R.drawable.ic_launcher)
+                    .setSmallIcon(R.drawable.ic_action_rss_icon_bola_transparente)
                     .setProgress(estimativa,0,false);
                     //.build();
             mNotifyManager.notify(C.NOTIFICATION_ID_ADICIONAR_FEED, mBuilder.build());

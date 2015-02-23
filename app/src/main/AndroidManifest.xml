@@ -24,6 +24,15 @@
             android:label="@string/title_activity_adicionar_feed"
             android:parentActivityName=".InicialActivity" >
         </activity>
+        <activity
+            android:name=".activity.ExibirPostsActivity"
+            android:label="@string/title_activity_exibir_posts"
+            android:parentActivityName=".InicialActivity" >
+        </activity>
+        <activity
+            android:name=".activity.LerPostActivity"
+            android:label="@string/title_activity_exibir_posts">
+        </activity>
 
         <receiver
             android:name=".receiver.ReceiverAdicionarFeed"

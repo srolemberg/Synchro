@@ -58,11 +58,11 @@ public class LimparConteudoFeedTask extends AsyncTask<String, Integer, Void> {
         super.onPreExecute();
         //estimativa = estimativaDosFor()*2;
         mNotifyManager = (NotificationManager) C.getContext().getSystemService(Context.NOTIFICATION_SERVICE);
-            mBuilder = new NotificationCompat.Builder(C.getContext())
+        mBuilder = new NotificationCompat.Builder(C.getContext())
                     .setContentTitle("Limpando " + feed.getTitulo())
                     .setContentText("Limpando o conteúdo do feed.")
                     .setOngoing(true)
-                    .setSmallIcon(R.drawable.ic_launcher)
+                    .setSmallIcon(R.drawable.ic_action_rss_icon_bola_transparente)
                     .setProgress(0,0,true);
                     //.build();
             mNotifyManager.notify(C.NOTIFICATION_ID_LIMPAR_CONTEUDO_FEED, mBuilder.build());

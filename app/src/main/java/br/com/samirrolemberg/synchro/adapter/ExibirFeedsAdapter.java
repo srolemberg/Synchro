@@ -1,5 +1,6 @@
 package br.com.samirrolemberg.synchro.adapter;
 
+import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -7,13 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 import br.com.samirrolemberg.synchro.R;
+import br.com.samirrolemberg.synchro.activity.ExibirPostsActivity;
 import br.com.samirrolemberg.synchro.fragment.InicialFragment;
 import br.com.samirrolemberg.synchro.model.Feed;
 import br.com.samirrolemberg.synchro.util.C;
@@ -47,14 +48,16 @@ public class ExibirFeedsAdapter extends RecyclerView.Adapter<ExibirFeedsAdapter.
                     .error(C.getContext().getResources().getDrawable(android.R.drawable.stat_notify_error))
                     .into(holder.imagem);
         }
+        holder.card.setTag(i);
+        fragment.registerForContextMenu(holder.card);
         holder.card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(C.getContext(), "Click: " + feed.getTitulo(), Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(fragment.getActivity(), ExibirPostsActivity.class);
+                intent.putExtra(C.getContext().getString(R.string.m_Feed),feed);
+                fragment.getActivity().startActivity(intent);
             }
         });
-        holder.card.setTag(i);
-        fragment.registerForContextMenu(holder.card);
     }
 
     @Override
