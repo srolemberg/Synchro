@@ -55,9 +55,6 @@ public class InicialFragment extends Fragment {
         orientacao = getResources().getConfiguration().orientation;
         rootView = (RelativeLayout) inflater.inflate(R.layout.fragment_inicial, container, false);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.listaExibirFeeds);
-        manager = new StaggeredGridLayoutManager(orientacao==vertical?1:2,StaggeredGridLayoutManager.VERTICAL);
-        manager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
-        recyclerView.setLayoutManager(manager);
 
         daoFeed = new DAOFeed(C.getContext());
         feeds = daoFeed.listarImagem();
@@ -65,10 +62,16 @@ public class InicialFragment extends Fragment {
 
         if (feeds.size()>0){
             adapter1 = new ExibirFeedsAdapter(feeds, InicialFragment.this);
+            manager = new StaggeredGridLayoutManager(orientacao==vertical?1:2,StaggeredGridLayoutManager.VERTICAL);
+            manager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
+            recyclerView.setLayoutManager(manager);
             recyclerView.setAdapter(adapter1);
         }else{
             feeds.add(new Feed.Builder().build());
             adapter2 = new ExibirFeedsVazioAdapter(feeds, InicialFragment.this);
+            manager = new StaggeredGridLayoutManager(1,StaggeredGridLayoutManager.VERTICAL);
+            manager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
+            recyclerView.setLayoutManager(manager);
             recyclerView.setAdapter(adapter2);
         }
 

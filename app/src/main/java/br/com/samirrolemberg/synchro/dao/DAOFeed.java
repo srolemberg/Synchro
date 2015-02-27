@@ -139,7 +139,7 @@ public class DAOFeed extends DAO{
             }
             cursor.close();
         } catch (Exception e) {
-            //Log.i("DAOs", e.getLocalizedMessage(),e);
+            Log.i("DAOs", e.getLocalizedMessage(),e);
         }
         return feeds;
     }

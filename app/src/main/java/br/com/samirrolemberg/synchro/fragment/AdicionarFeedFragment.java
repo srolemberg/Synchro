@@ -19,11 +19,13 @@ import android.view.ViewGroup;
 import android.webkit.URLUtil;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.google.gson.Gson;
+import com.squareup.picasso.Picasso;
 
 import br.com.samirrolemberg.synchro.R;
 import br.com.samirrolemberg.synchro.conn.DatabaseManager;
@@ -45,27 +47,13 @@ public class AdicionarFeedFragment extends Fragment implements AdicionarFeedDele
     private Button add;
     private View layout;
 
-    private TextView nome, descricao, link, idioma, categoria;
+    private TextView nome, descricao, link;
+    private ImageView imagem;
 
     private AdicionarFeedVolleyTask task;
     private Feed feed;
 
     ProgressDialog pDialog;
-
-    private void show(Context context, Feed feed){
-        layout.setVisibility(View.VISIBLE);
-        nome.setText(feed.getTitulo());
-        descricao.setText(feed.getDescricao());
-        link.setText(feed.getLink());
-        idioma.setText(feed.getIdioma());
-        String cat = "";
-        StringBuffer buffer = new StringBuffer();
-        for (Categoria c:feed.getCategorias()){
-            buffer.append(c.getNome()+"|");
-        }
-        cat=buffer.toString();
-        categoria.setText(cat);
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -86,8 +74,7 @@ public class AdicionarFeedFragment extends Fragment implements AdicionarFeedDele
         nome        = (TextView) rootView.findViewById(R.id.nome_adicionar_feed);
         descricao   = (TextView) rootView.findViewById(R.id.descricao_adicionar_feed);
         link        = (TextView) rootView.findViewById(R.id.link_adicionar_feed);
-        idioma      = (TextView) rootView.findViewById(R.id.idioma_adicionar_feed);
-        categoria   = (TextView) rootView.findViewById(R.id.categoria_adicionar_feed);
+        imagem      = (ImageView)rootView.findViewById(R.id.imagem_adicionar_feed);
 
         SharedPreferences preferences = C.getPreferences(C.getContext().getString(R.string.c_ADICIONAR_FEED));
         if (!preferences.getString(C.getContext().getString(R.string.FEED_CACHE),"").isEmpty()){
@@ -183,12 +170,15 @@ public class AdicionarFeedFragment extends Fragment implements AdicionarFeedDele
         nome.setText(feed.getTitulo());
         descricao.setText(feed.getDescricao());
         link.setText(feed.getRss());
-        idioma.setText(feed.getIdioma());
-        StringBuffer cat = new StringBuffer();
-        for(Categoria c : feed.getCategorias()){
-            cat.append(c.getNome()+"|");
+        if (feed.getImagem()!=null){
+            if (!feed.getImagem().getUrl().trim().isEmpty()){
+                Picasso.with(C.getContext()).load(feed.getImagem().getUrl()).into(imagem);
+            }else{
+                imagem.setVisibility(View.GONE);
+            }
+        }else{
+            imagem.setVisibility(View.GONE);
         }
-        categoria.setText(cat.toString());
         layout.setVisibility(View.VISIBLE);
     }
 

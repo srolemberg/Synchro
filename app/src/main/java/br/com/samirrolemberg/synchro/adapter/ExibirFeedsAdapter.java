@@ -42,11 +42,17 @@ public class ExibirFeedsAdapter extends RecyclerView.Adapter<ExibirFeedsAdapter.
         holder.titulo.setText(feed.getTitulo());
         holder.link.setText(feed.getLink());
         if (feed.getImagem()!=null){
-            Picasso.with(C.getContext())
-                    .load(feed.getImagem().getUrl())
-                    .placeholder(C.getContext().getResources().getDrawable(R.drawable.ic_launcher))
-                    .error(C.getContext().getResources().getDrawable(android.R.drawable.stat_notify_error))
-                    .into(holder.imagem);
+            if (!feed.getImagem().getUrl().isEmpty()){
+                Picasso.with(C.getContext())
+                        .load(feed.getImagem().getUrl())
+                        .placeholder(C.getContext().getResources().getDrawable(R.drawable.ic_launcher))
+                        .error(C.getContext().getResources().getDrawable(android.R.drawable.stat_notify_error))
+                        .into(holder.imagem);
+            }else{
+                holder.imagem.setVisibility(View.GONE);
+            }
+        }else{
+            holder.imagem.setVisibility(View.GONE);
         }
         holder.card.setTag(i);
         fragment.registerForContextMenu(holder.card);

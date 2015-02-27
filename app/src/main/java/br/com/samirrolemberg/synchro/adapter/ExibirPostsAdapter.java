@@ -45,6 +45,7 @@ public class ExibirPostsAdapter extends RecyclerView.Adapter<ExibirPostsAdapter.
         holder.data.setText(U.time_24_date_mask(post.getData_publicacao(), C.getContext()));
 
         holder.card.setTag(i);
+
         fragment.registerForContextMenu(holder.card);
         holder.card.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,7 +55,8 @@ public class ExibirPostsAdapter extends RecyclerView.Adapter<ExibirPostsAdapter.
                 fragment.getActivity().startActivity(intent);
             }
         });
-        Picasso.with(C.getContext()).load(post.getFeed().getImagem().getUrl()).into(holder.image);
+
+        Picasso.with(C.getContext()).load("http://barbarella.deadendthrills.com/imagestore/DET3/homeworldremasteredcollection/large/underway.png").into(holder.image);
     }
 
     @Override
@@ -79,7 +81,7 @@ public class ExibirPostsAdapter extends RecyclerView.Adapter<ExibirPostsAdapter.
             autor   =   (TextView)  v.findViewById(R.id.autor_exibir_posts);
             data    =   (TextView)  v.findViewById(R.id.data_exibir_posts);
             card    =   (CardView)  v.findViewById(R.id.card_exibir_posts);
-            image    =   (ImageView)  v.findViewById(R.id.image_card);
+            image   =   (ImageView) v.findViewById(R.id.image_card);
         }
     }
 }

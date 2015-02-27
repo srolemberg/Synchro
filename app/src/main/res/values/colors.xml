@@ -2,4 +2,24 @@
 <resources>
     <color name="colorPrimary">#ff8800</color>
     <color name="colorPrimaryDark">#ffaa00</color>
+
+    <color name="synchro_light_001">#e57439</color>
+    <color name="synchro_light_002">#ff8e53</color>
+    <color name="synchro_light_003">#ffa76c</color>
+    <color name="synchro_light_004">#ffc186</color>
+    <color name="synchro_light_005">#ffda9f</color>
+    <color name="synchro_light_006">#fff3b8</color>
+    <color name="synchro_light_007">#ffffd2</color>
+    <color name="synchro_light_008">#ffffec</color>
+
+    <color name="synchro_dark_001">#e57439</color>
+    <color name="synchro_dark_002">#cc5b20</color>
+    <color name="synchro_dark_003">#b24106</color>
+    <color name="synchro_dark_004">#992800</color>
+    <color name="synchro_dark_005">#7f0e00</color>
+    <color name="synchro_dark_006">#660000</color>
+    <color name="synchro_dark_007">#4c0000</color>
+    <color name="synchro_dark_008">#330000</color>
+    <color name="synchro_dark_009">#190000</color>
+
 </resources>

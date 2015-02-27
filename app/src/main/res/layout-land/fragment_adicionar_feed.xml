@@ -40,9 +40,9 @@ tools:context="br.com.samirrolemberg.synchro.activity.AdicionarFeedActivity$Plac
         card_view:cardElevation="3dp"
         card_view:cardCornerRadius="2dp"
         android:layout_below="@+id/url_adicionar_feed"
-        android:layout_marginTop="10dp"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="10dp">
 
         <RelativeLayout
             android:id="@+id/layout_adicionar_feed"
@@ -57,7 +57,7 @@ tools:context="br.com.samirrolemberg.synchro.activity.AdicionarFeedActivity$Plac
 
             <ImageView
                 android:id="@+id/imagem_adicionar_feed"
-                android:layout_width="match_parent"
+                android:layout_width="250dp"
                 android:layout_height="90dp"
                 android:visibility="visible"
                 android:scaleType="fitXY"
@@ -70,10 +70,10 @@ tools:context="br.com.samirrolemberg.synchro.activity.AdicionarFeedActivity$Plac
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="Nome"
                 android:id="@+id/nome_adicionar_feed"
-                android:layout_below="@+id/imagem_adicionar_feed"
                 android:textStyle="bold"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" />
+                android:layout_alignParentTop="true"
+                android:layout_toRightOf="@+id/imagem_adicionar_feed"
+                android:layout_toEndOf="@+id/imagem_adicionar_feed" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -82,8 +82,8 @@ tools:context="br.com.samirrolemberg.synchro.activity.AdicionarFeedActivity$Plac
                 android:text="Descrição"
                 android:id="@+id/descricao_adicionar_feed"
                 android:layout_below="@+id/nome_adicionar_feed"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" />
+                android:layout_toRightOf="@+id/imagem_adicionar_feed"
+                android:layout_toEndOf="@+id/imagem_adicionar_feed" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -92,17 +92,17 @@ tools:context="br.com.samirrolemberg.synchro.activity.AdicionarFeedActivity$Plac
                 android:text="http://site.com/feedrss"
                 android:id="@+id/link_adicionar_feed"
                 android:layout_below="@+id/descricao_adicionar_feed"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" />
+                android:layout_toRightOf="@+id/imagem_adicionar_feed"
+                android:layout_toEndOf="@+id/imagem_adicionar_feed" />
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Adicionar"
                 android:id="@+id/adicionar_adicionar_feed"
+                android:layout_alignParentTop="true"
                 android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
-                android:layout_below="@+id/link_adicionar_feed" />
+                android:layout_alignParentEnd="true" />
 
         </RelativeLayout>
     </android.support.v7.widget.CardView>
