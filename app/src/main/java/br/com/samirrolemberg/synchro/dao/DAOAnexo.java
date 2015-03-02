@@ -1,13 +1,13 @@
 package br.com.samirrolemberg.synchro.dao;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import br.com.samirrolemberg.synchro.conn.DatabaseManager;
 import br.com.samirrolemberg.synchro.model.Anexo;
@@ -66,7 +66,31 @@ public class DAOAnexo extends DAO{
 		return anexos;
 	}
 
-	public Anexo buscar(Post post){
+    public List<Anexo> listarConteudo(Post post, String conteudo){
+        List<Anexo> anexos = new ArrayList<Anexo>();
+        try {
+            String[] args = {post.getIdPost()+"","%"+conteudo+"%"};
+            StringBuffer sql = new StringBuffer();
+            sql.append("select * from "+TABLE+" where idPost = ? and tipo like ?");
+            Cursor cursor = database.rawQuery(sql.toString(), args);
+            while (cursor.moveToNext()) {
+                Anexo anexo = new Anexo.Builder()
+                        .idAnexo(cursor.getLong(cursor.getColumnIndex("idAnexo")))
+                        .tamanho(cursor.getLong(cursor.getColumnIndex("tamanho")))
+                        .post(post)
+                        .tipo(cursor.getString(cursor.getColumnIndex("tipo")))
+                        .url(cursor.getString(cursor.getColumnIndex("url")))
+                        .build();
+                anexos.add(anexo);
+            }
+            cursor.close();
+        } catch (Exception e) {
+            Log.i("DAOs", e.getLocalizedMessage(),e);
+        }
+        return anexos;
+    }
+
+    public Anexo buscar(Post post){
 		Anexo anexo = null;
 		try {
 			String[] args = {post.getIdPost()+""};
@@ -89,7 +113,31 @@ public class DAOAnexo extends DAO{
 		return anexo;
 	}
 
-	public int remover(Post post){
+    public Anexo buscarConteudo(Post post, String conteudo){
+        Anexo anexo = null;
+        try {
+            String[] args = {post.getIdPost()+"","%"+conteudo+"%"};
+            StringBuffer sql = new StringBuffer();
+            sql.append("select * from "+TABLE+" where idPost = ? and tipo like ? limit 1");
+            Cursor cursor = database.rawQuery(sql.toString(), args);
+            if (cursor.moveToNext()) {
+                anexo = new Anexo.Builder()
+                        .idAnexo(cursor.getLong(cursor.getColumnIndex("idAnexo")))
+                        .tamanho(cursor.getLong(cursor.getColumnIndex("tamanho")))
+                        .post(post)
+                        .tipo(cursor.getString(cursor.getColumnIndex("tipo")))
+                        .url(cursor.getString(cursor.getColumnIndex("url")))
+                        .build();
+            }
+            cursor.close();
+        } catch (Exception e) {
+            Log.i("DAOs", e.getLocalizedMessage(),e);
+        }
+        return anexo;
+    }
+
+
+    public int remover(Post post){
 		String[] args = {post.getIdPost()+""};
 		return database.delete(TABLE, "idPost=?", args);
 	}

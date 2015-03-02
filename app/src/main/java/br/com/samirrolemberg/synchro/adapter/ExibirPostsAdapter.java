@@ -11,11 +11,23 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Attribute;
+import org.jsoup.nodes.Attributes;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
+
+import java.util.Iterator;
 import java.util.List;
 
 import br.com.samirrolemberg.synchro.R;
 import br.com.samirrolemberg.synchro.activity.LerPostActivity;
+import br.com.samirrolemberg.synchro.conn.DatabaseManager;
+import br.com.samirrolemberg.synchro.dao.DAOAnexo;
+import br.com.samirrolemberg.synchro.dao.DAOConteudo;
 import br.com.samirrolemberg.synchro.fragment.ExibirPostsFragment;
+import br.com.samirrolemberg.synchro.model.Anexo;
+import br.com.samirrolemberg.synchro.model.Conteudo;
 import br.com.samirrolemberg.synchro.model.Post;
 import br.com.samirrolemberg.synchro.util.C;
 import br.com.samirrolemberg.synchro.util.U;
@@ -30,6 +42,43 @@ public class ExibirPostsAdapter extends RecyclerView.Adapter<ExibirPostsAdapter.
     public ExibirPostsAdapter(List<Post> posts, ExibirPostsFragment fragment) {
         this.posts = posts;
         this.fragment = fragment;
+        if (posts!=null||posts.size()>0){
+            final DAOConteudo daoConteudo = new DAOConteudo(C.getContext());
+            final DAOAnexo daoAnexo = new DAOAnexo(C.getContext());
+            for (Post post: posts){
+                    List<Anexo> anexos = daoAnexo.listarConteudo(post,"image");
+                    if (anexos.size()==0) {//se post não tem anexo de imagem.
+                        if (post != null) {
+                            Conteudo conteudo = daoConteudo.buscar(post);
+                            if (conteudo != null) {
+                                Document document = Jsoup.parse(conteudo.getValor());
+                                Elements elements = document.getElementsByTag("img");
+                                if (elements != null || elements.size() > 0) {
+                                    for (int e = 0; e < elements.size(); e++) {
+                                        Attributes attributes = elements.get(e).attributes();
+                                        Iterator<Attribute> iterator = attributes.iterator();
+                                        while (iterator.hasNext()) {
+                                            Attribute attribute = iterator.next();
+                                            if (attribute.getKey().equals("src")) {
+                                                String url = attribute.getValue();
+                                                Anexo anexo = new Anexo.Builder()
+                                                        .tamanho(0)
+                                                        .tipo("image/" + url.substring(url.length() - 3, url.length()))
+                                                        .url(url)
+                                                        .acesso(0)
+                                                        .build();
+                                                daoAnexo.inserir(anexo, post.getIdPost());
+                                            }//src
+                                        }//while
+                                    }//for element
+                                }//if element
+                            }//conteudo null
+                        }//post null
+                    }//else anexo
+            }
+            DatabaseManager.getInstance().closeDatabase();
+            DatabaseManager.getInstance().closeDatabase();
+        }//post not null
     }
 
     @Override
@@ -46,6 +95,18 @@ public class ExibirPostsAdapter extends RecyclerView.Adapter<ExibirPostsAdapter.
 
         holder.card.setTag(i);
 
+        DAOAnexo daoAnexo = new DAOAnexo(C.getContext());
+        Anexo anexo = daoAnexo.buscarConteudo(post, "image");
+        if (anexo!=null){
+            if (!anexo.getUrl().trim().isEmpty()){
+                Picasso.with(C.getContext()).load(anexo.getUrl()).into(holder.image);
+                holder.image.setVisibility(View.VISIBLE);
+            }
+        }
+
+
+        DatabaseManager.getInstance().closeDatabase();
+
         fragment.registerForContextMenu(holder.card);
         holder.card.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,7 +117,66 @@ public class ExibirPostsAdapter extends RecyclerView.Adapter<ExibirPostsAdapter.
             }
         });
 
-        Picasso.with(C.getContext()).load("http://barbarella.deadendthrills.com/imagestore/DET3/homeworldremasteredcollection/large/underway.png").into(holder.image);
+//        final DAOConteudo daoConteudo = new DAOConteudo(C.getContext());
+//        final DAOAnexo daoAnexo = new DAOAnexo(C.getContext());
+//
+//        List<Anexo> anexos = daoAnexo.listarConteudo(post,"image");
+//
+//        if (anexos.size()>0){//se tem anexo.
+//            holder.image.setVisibility(View.GONE);
+//            for (Anexo anexo : anexos){
+//                if (anexo.getTipo().contains("image")){
+//                    holder.image.setVisibility(View.VISIBLE);
+//                    Picasso.with(C.getContext())
+//                            .load(anexo.getUrl())
+//                            .into(holder.image);
+//                    break;
+//                }
+//            }
+//        }else{
+//            if (post != null) {
+//                Conteudo conteudo = daoConteudo.buscar(post);
+//                if (conteudo != null) {
+//                    Document document = Jsoup.parse(conteudo.getValor());
+//                    Elements elements = document.getElementsByTag("img");
+//                    if (elements != null || elements.size() > 0) {
+//                        for (int e = 0; e < elements.size(); e++) {
+//                            Attributes attributes = elements.get(e).attributes();
+//                            Iterator<Attribute> iterator = attributes.iterator();
+//                            while (iterator.hasNext()) {
+//                                Attribute attribute = iterator.next();
+//                                if (attribute.getKey().equals("src")) {
+//                                    String url = attribute.getValue();
+//                                    Anexo anexo = new Anexo.Builder()
+//                                            .tamanho(0)
+//                                            .tipo("image/" + url.substring(url.length() - 3, url.length()))
+//                                            .url(url)
+//                                            .acesso(0)
+//                                            .build();
+//                                    daoAnexo.inserir(anexo, post.getIdPost());
+//                                }//src
+//                            }//while
+//                        }//for element
+//                    }//if element
+//                }//conteudo null
+//            }//post null
+//            List<Anexo> anexos2 = daoAnexo.listarConteudo(post,"image");
+//
+//            if (anexos.size()>0) {//se tem anexo.
+//                holder.image.setVisibility(View.GONE);
+//                for (Anexo anexo : anexos) {
+//                    if (anexo.getTipo().contains("image")){
+//                        holder.image.setVisibility(View.VISIBLE);
+//                        Picasso.with(C.getContext())
+//                                .load(anexo.getUrl())
+//                                .into(holder.image);
+//                        break;
+//                    }
+//                }
+//            }else{
+//                holder.image.setVisibility(View.GONE);
+//            }
+//        }//else anexo
     }
 
     @Override
