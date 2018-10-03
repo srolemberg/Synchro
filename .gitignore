@@ -5,6 +5,8 @@
 .DS_Store
 /build
 /captures
+/.idea
+*.iml
 
 # Created by https://www.gitignore.io/api/intellij,android
 

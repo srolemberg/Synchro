@@ -5,7 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,7 +16,7 @@ import br.com.samirrolemberg.synchro.dialogs.DialogSobre;
 import br.com.samirrolemberg.synchro.fragment.InicialFragment;
 import br.com.samirrolemberg.synchro.util.C;
 
-public class InicialActivity extends ActionBarActivity {
+public class InicialActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,8 +51,8 @@ public class InicialActivity extends ActionBarActivity {
             Intent intent = new Intent(this, AdicionarFeedActivity.class);
             startActivity(intent);
             return true;
-        }else if (id == R.id.menu_sobre){
-            final View inflated = LayoutInflater.from(C.getContext()).inflate(R.layout.dialog_sobre,null);
+        } else if (id == R.id.menu_sobre) {
+            final View inflated = LayoutInflater.from(C.getContext()).inflate(R.layout.dialog_sobre, null);
             final View build = new DialogSobre(inflated).build();
             final AlertDialog dialog = new AlertDialog.Builder(InicialActivity.this)
                     .setView(build)

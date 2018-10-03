@@ -2,12 +2,12 @@ package br.com.samirrolemberg.synchro.activity;
 
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 
 import br.com.samirrolemberg.synchro.R;
 import br.com.samirrolemberg.synchro.fragment.AdicionarFeedFragment;
 
-public class AdicionarFeedActivity extends ActionBarActivity {
+public class AdicionarFeedActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

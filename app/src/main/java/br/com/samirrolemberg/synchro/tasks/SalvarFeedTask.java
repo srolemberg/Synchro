@@ -1,9 +1,11 @@
 package br.com.samirrolemberg.synchro.tasks;
 
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
@@ -48,34 +50,44 @@ public class SalvarFeedTask extends AsyncTask<String, Integer, Void> {
     private DAOImagem daoImagem = null;
 
 
-    public SalvarFeedTask(SalvarFeedService service, Intent intent, Feed feed, long idFeed){
+    public SalvarFeedTask(SalvarFeedService service, Intent intent, Feed feed, long idFeed) {
         super();
-        this.service=service;
-        this.intent=intent;
-        this.feed=feed;
-        this.idFeed=idFeed;
+        this.service = service;
+        this.intent = intent;
+        this.feed = feed;
+        this.idFeed = idFeed;
     }
 
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        estimativa = estimativaDosFor()*2;
+        estimativa = estimativaDosFor() * 2;
         mNotifyManager = (NotificationManager) C.getContext().getSystemService(Context.NOTIFICATION_SERVICE);
-            mBuilder = new NotificationCompat.Builder(C.getContext())
-                    .setContentTitle("Adicionando "+feed.getTitulo())
-                    .setContentText("Adicionando novos registros.")
-                    .setOngoing(true)
-                    .setSmallIcon(R.drawable.ic_stat_white_nox)
-                    .setProgress(estimativa,0,false);
-                    //.build();
-            mNotifyManager.notify(C.NOTIFICATION_ID_ADICIONAR_FEED, mBuilder.build());
+
+
+        mBuilder = new NotificationCompat.Builder(C.getContext(), "default")
+                .setContentTitle("Adicionando " + feed.getTitulo())
+                .setContentText("Adicionando novos registros.")
+                .setOngoing(true)
+                .setSmallIcon(R.drawable.ic_stat_white_nox)
+                .setProgress(estimativa, 0, false);
+        //.build();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel("default", "chanel name", NotificationManager.IMPORTANCE_DEFAULT);
+            mNotifyManager.createNotificationChannel(channel);
+            channel.setDescription("channel description");
+        }
+
+        mNotifyManager.notify(C.NOTIFICATION_ID_ADICIONAR_FEED, mBuilder.build());
+
+
     }
 
     @Override
     protected Void doInBackground(String... params) {
         addFeed();
         mBuilder.setContentText("Novo Feed adicionado.")
-                .setProgress(0,0,false);
+                .setProgress(0, 0, false);
         mNotifyManager.notify(C.NOTIFICATION_ID_ADICIONAR_FEED, mBuilder.build());
 
         return null;
@@ -84,7 +96,7 @@ public class SalvarFeedTask extends AsyncTask<String, Integer, Void> {
     @Override
     protected void onProgressUpdate(Integer... values) {
         super.onProgressUpdate(values);
-        mBuilder.setProgress(estimativa,values[0],false);
+        mBuilder.setProgress(estimativa, values[0], false);
         mNotifyManager.notify(C.NOTIFICATION_ID_ADICIONAR_FEED, mBuilder.build());
     }
 
@@ -95,8 +107,8 @@ public class SalvarFeedTask extends AsyncTask<String, Integer, Void> {
         mBuilder.setProgress(0, 0, false)
                 .setOngoing(false);
         mNotifyManager.notify(C.NOTIFICATION_ID_ADICIONAR_FEED, mBuilder.build());
-        Toast.makeText(C.getContext(), feed.getTitulo()+" foi adicionado com sucesso.", Toast.LENGTH_SHORT).show();
-        if (service!=null) {
+        Toast.makeText(C.getContext(), feed.getTitulo() + " foi adicionado com sucesso.", Toast.LENGTH_SHORT).show();
+        if (service != null) {
             Log.i("MY-SERVICES", "SalvarFeedsTask - TRY STOP");
             this.cancel(false);
             service.stopService(intent);
@@ -104,21 +116,21 @@ public class SalvarFeedTask extends AsyncTask<String, Integer, Void> {
 
     }
 
-    private int estimativaDosFor(){
+    private int estimativaDosFor() {
         int i = 0;//pq pode adicionar apenas o feed sem nada (!)
-        if (feed.getCategorias()!=null) {
+        if (feed.getCategorias() != null) {
             i += feed.getCategorias().size();
         }
-        if (feed.getPosts()!=null) {
+        if (feed.getPosts() != null) {
             i += feed.getPosts().size();
             for (Post post : feed.getPosts()) {
-                if (post.getAnexos()!=null) {
+                if (post.getAnexos() != null) {
                     i += post.getAnexos().size();
                 }
-                if (post.getCategorias()!=null) {
+                if (post.getCategorias() != null) {
                     i += post.getCategorias().size();
                 }
-                if (post.getConteudos()!=null) {
+                if (post.getConteudos() != null) {
                     i += post.getConteudos().size();
                 }
             }
@@ -126,9 +138,9 @@ public class SalvarFeedTask extends AsyncTask<String, Integer, Void> {
         return i;
     }
 
-    private void addFeed(){
+    private void addFeed() {
         daoFeed = new DAOFeed(C.getContext());
-        if (idFeed!=-1) {
+        if (idFeed != -1) {
             daoPost = new DAOPost(C.getContext());
             daoDescricao = new DAODescricao(C.getContext());
             daoConteudo = new DAOConteudo(C.getContext());
@@ -136,55 +148,55 @@ public class SalvarFeedTask extends AsyncTask<String, Integer, Void> {
             daoCategoria = new DAOCategoria(C.getContext());
             daoImagem = new DAOImagem(C.getContext());
 
-            if (feed.getCategorias()!=null) {
+            if (feed.getCategorias() != null) {
                 //pega a categoria do feed
                 for (int i = 0; i < feed.getCategorias().size(); i++) {
                     //objeto de Feed ainda não tem id. Cria um objeto apenas com o id retornado do insert
                     daoCategoria.inserir(feed.getCategorias().get(i), (new Feed.Builder().idFeed(idFeed).build()));
-                    atual ++;
+                    atual++;
                     publishProgress(atual);
                 }
             }
-            if (feed.getImagem()!=null) {
+            if (feed.getImagem() != null) {
                 //pega a imagem do feed
                 daoImagem.inserir(feed.getImagem(), idFeed);
             }
-            if (feed.getPosts()!=null) {
+            if (feed.getPosts() != null) {
                 idsPost = new ArrayList<Long>();
                 for (int i = 0; i < feed.getPosts().size(); i++) {
-                    atual ++;
+                    atual++;
                     publishProgress(atual);
 
                     long idPost = daoPost.inserir(feed.getPosts().get(i), idFeed);
                     idsPost.add(idPost);
                     //pega as categorias dos posts
-                    if (feed.getPosts().get(i).getCategorias()!=null) {
+                    if (feed.getPosts().get(i).getCategorias() != null) {
                         //pega a categoria do feed
                         for (int j = 0; j < feed.getPosts().get(i).getCategorias().size(); j++) {
                             //objeto de Post ainda não tem id. Cria um objeto apenas com o id retornado do insert
                             daoCategoria.inserir(feed.getPosts().get(i).getCategorias().get(j), (new Post.Builder().idPost(idPost).build()));
-                            atual ++;
+                            atual++;
                             publishProgress(atual);
                         }
 
                     }
                     //pega os anexos do post
-                    if (feed.getPosts().get(i).getAnexos()!=null) {
+                    if (feed.getPosts().get(i).getAnexos() != null) {
                         for (int j = 0; j < feed.getPosts().get(i).getAnexos().size(); j++) {
                             daoAnexo.inserir(feed.getPosts().get(i).getAnexos().get(j), idPost);
-                            atual ++;
+                            atual++;
                             publishProgress(atual);
                         }
                     }
                     //para cada post tem uma ou mais descrições
-                    if (feed.getPosts().get(i).getDescricao()!=null) {
+                    if (feed.getPosts().get(i).getDescricao() != null) {
                         daoDescricao.inserir(feed.getPosts().get(i).getDescricao(), idPost);
                     }
                     //para cada post tem uma ou mais conteudos
-                    if (feed.getPosts().get(i).getConteudos()!=null) {
+                    if (feed.getPosts().get(i).getConteudos() != null) {
                         for (int j = 0; j < feed.getPosts().get(i).getConteudos().size(); j++) {
                             daoConteudo.inserir(feed.getPosts().get(i).getConteudos().get(j), idPost);
-                            atual ++;
+                            atual++;
                             publishProgress(atual);
                         }
                     }
@@ -204,29 +216,30 @@ public class SalvarFeedTask extends AsyncTask<String, Integer, Void> {
         //daoFeed.DatabaseManager.getInstance().closeDatabase();
         //TODO: JOGAR O PROCESSO DE ADIÇÃO EM BACKGROUND NUMA NOTIFICAÇÃO.
     }
-    private void atualiza(){
-        Feed idf= new Feed.Builder().idFeed(idFeed).build();
+
+    private void atualiza() {
+        Feed idf = new Feed.Builder().idFeed(idFeed).build();
         daoFeed.atualizaAcesso(idf, 1);
 
-        atual+=	daoCategoria.atualizaAcesso(idf, 1);
+        atual += daoCategoria.atualizaAcesso(idf, 1);
         publishProgress(atual);
 
         daoImagem.atualizaAcesso(idf, 1);
         for (Long idPost : idsPost) {
             Post post = new Post.Builder().idPost(idPost).build();
 
-            atual+=	daoPost.atualizaAcesso(post, 1);
+            atual += daoPost.atualizaAcesso(post, 1);
             publishProgress(atual);
 
-            atual+=	daoCategoria.atualizaAcesso(post, 1);
+            atual += daoCategoria.atualizaAcesso(post, 1);
             publishProgress(atual);
 
             daoDescricao.atualizaAcesso(post, 1);
 
-            atual+=	daoConteudo.atualizaAcesso(post, 1);
+            atual += daoConteudo.atualizaAcesso(post, 1);
             publishProgress(atual);
 
-            atual+=	daoAnexo.atualizaAcesso(post, 1);
+            atual += daoAnexo.atualizaAcesso(post, 1);
             publishProgress(atual);
         }
     }

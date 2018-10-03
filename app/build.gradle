@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 21
-    buildToolsVersion "21.1.2"
+    compileSdkVersion 28
+    buildToolsVersion "28.0.3"
 
     defaultConfig {
         applicationId "br.com.samirrolemberg.synchro"
-        minSdkVersion 15
-        targetSdkVersion 21
+        minSdkVersion 21
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
     }
@@ -20,15 +20,15 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:21.+'
-    compile 'com.android.support:cardview-v7:21.+'
-    compile 'com.android.support:support-v4:21.+'
-    compile 'com.android.support:recyclerview-v7:21.+'
-    compile 'com.squareup.picasso:picasso:2.5.0'
-    compile 'com.google.code.gson:gson:2.3.1'
-    compile 'com.mcxiaoke.volley:library:1.0.10'
-    compile 'org.jsoup:jsoup:1.8.1'
-    compile files('libs/android-rome-feed-reader-1.0.0-r2.jar')
-    compile files('libs/jdom-1.1.1-android-fork.jar')
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation 'com.android.support:cardview-v7:28.0.0'
+    implementation 'com.android.support:support-v4:28.0.0'
+    implementation 'com.android.support:recyclerview-v7:28.0.0'
+    implementation 'com.squareup.picasso:picasso:2.5.2'
+    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'com.mcxiaoke.volley:library:1.0.19'
+    implementation 'org.jsoup:jsoup:1.11.3'
+    implementation files('libs/android-rome-feed-reader-1.0.0-r2.jar')
+    implementation files('libs/jdom-1.1.1-android-fork.jar')
 }
