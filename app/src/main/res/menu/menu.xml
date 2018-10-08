@@ -1,8 +1,0 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <item
-        android:id="@+id/menu_fragment_lista_feed_detalhes"
-        android:title="Detalhes"
-        android:orderInCategory="1"
-        android:icon="@android:drawable/ic_menu_add"/>
-</menu>

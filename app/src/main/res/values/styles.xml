@@ -1,9 +1,0 @@
-<resources>
-
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="colorPrimary">@color/synchro_dark_001</item>
-        <item name="colorPrimaryDark">@color/synchro_dark_002</item>
-    </style>
-
-</resources>
